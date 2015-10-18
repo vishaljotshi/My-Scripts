@@ -13,6 +13,7 @@ while True:
         fname="/index.html"
     fileptr = open("/sdcard/www" + fname,'r')
     code = fileptr.read()
+    print "code file pointer"
     buf=("HTTP/1.1 200 OK\n"
     "Server: Fake Python Server/2.2.22\n"
     "Keep-Alive: timeout=5, max=100\n"
