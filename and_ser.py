@@ -6,7 +6,7 @@ s.bind(("0.0.0.0",800))
 s.listen(5)
 while True:
     c,a=s.accept()
-    print "Received connecion from ", a
+    print "Received connecion from IP address: ", a
     req=c.recv(2048)
     fname=req.split("\r\n")[0].split(" ")[1]
     if fname=="/":
