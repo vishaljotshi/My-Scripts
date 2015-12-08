@@ -1,9 +1,9 @@
 import psutil,time
-safeList=[]
-newList=[]
+safeList={}
+newList={}
 
 for process in psutil.process_iter():
-    safeList.append(process.pid)
+    safeList[process.pid]=process.name()
 
 while(True):
     time.sleep(0.5)
@@ -11,22 +11,16 @@ while(True):
         if(process.pid not in safeList):
             try:
                 #process.terminate()
-                print "New Process :"+ process.name()+" "+str(process.pid)
-                safeList.append(process.pid)
-                #try:
-                #    print process.open_files()
-                #except:
-                #   pass
+                print "[+] New Process : "+ process.name()+" "+str(process.pid)
+                safeList[process.pid]=process.name()
             except:
                 print "---exception occured----"
 
-    for pid in safeList:
+    for pid,name in safeList.items():
         try:
             proc=psutil.Process(pid)
         except:
-            print "Terminated :" + str(pid)
-            try:
-                safeList.remove(pid)
-            except:
-                pass
+            print "[-] Terminated  : " + name + " "+str(pid)
+            del safeList[pid]
+            
                 
