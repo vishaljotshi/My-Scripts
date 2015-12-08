@@ -1,7 +1,9 @@
-import psutil,time
+import psutil,time,colorama
+from colorama import Fore, Back
 safeList={}
 newList={}
 
+colorama.init()
 for process in psutil.process_iter():
     safeList[process.pid]=process.name()
 
@@ -11,7 +13,7 @@ while(True):
         if(process.pid not in safeList):
             try:
                 #process.terminate()
-                print "[+] New Process : "+ process.name()+" "+str(process.pid)
+                print Fore.GREEN+"[+] New Process : "+ process.name()+" "+str(process.pid)+Fore.WHITE
                 safeList[process.pid]=process.name()
             except:
                 print "---exception occured----"
@@ -20,7 +22,7 @@ while(True):
         try:
             proc=psutil.Process(pid)
         except:
-            print "[-] Terminated  : " + name + " "+str(pid)
+            print Back.RED+"[-] Terminated  : " + name + " "+str(pid)+Back.BLACK
             del safeList[pid]
             
                 
