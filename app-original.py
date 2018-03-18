@@ -1,5 +1,5 @@
 import hmac,requests
-#from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 
 ##pips : bs4,lxml
 headers={"X-ClientVersion":"3.7.1","X-Unity-Version":"5.5.3p4","X-OS":"Android OS 4.4.4 / API-19 (KTU84P/eng..20171228.113339)","Content-Type":"application/xml","Cache-Control":"no-cache","User-Agent":"Dalvik/1.6.0 (Linux; U; Android 4.4.4; SM-G950F Build/KTU84P)","Host":"gpwarrobots.pixapi.net","Connection":"close","Accept-Encoding":"gzip, deflate"}    
@@ -25,8 +25,8 @@ def consumeResearch(rid):
 
     response=serverpost(consumeApi,body)
     #print "Response length :" + str(len(response.text))
-    #rsp_bs=BeautifulSoup(response.text,'xml')
-    #print "After consuming Workshop Points = "+rsp_bs.rp.string
+    rsp_bs=BeautifulSoup(response.text,'xml')
+    print "After consuming Workshop Points = "+rsp_bs.rp.string
 
 def startResearch():
     research_data="""<?xml version="1.0" encoding="utf-8"?>
@@ -57,19 +57,18 @@ data="""<?xml version="1.0" encoding="utf-8"?>
 </loginMessage>"""
 
 resp=serverpost("https://gpwarrobots.pixapi.net/api/login/byidentity",data)
-print resp.text
 
-#xmlresp=BeautifulSoup(resp.text,'xml')
+xmlresp=BeautifulSoup(resp.text,'xml')
 
 #got token
-#token=xmlresp.sessionMessage.sessionId.get_text()
-#print "Token : "+token
+token=xmlresp.sessionMessage.sessionId.get_text()
+print "Token : "+token
 
 
 #setting session header
-#headers["X-RestSession"]=token
+headers["X-RestSession"]=token
 
-#print headers["X-RestSession"]
+print headers["X-RestSession"]
 
 
 #Regular chest status
@@ -92,20 +91,20 @@ data="""<?xml version="1.0" encoding="utf-8"?>
 <anyType />"""
 
 wspResponse=serverpost("https://gpwarrobots.pixapi.net/api/lab/get",data)
-#wspSoup=BeautifulSoup(wspResponse.text,'xml')
-#researches=wspSoup.find_all('researches')
-#print "Before consuming Workshop Points : "+wspSoup.rp.string
+wspSoup=BeautifulSoup(wspResponse.text,'xml')
+researches=wspSoup.find_all('researches')
+print "Before consuming Workshop Points : "+wspSoup.rp.string
 
 doneCount=0
 
-#for research in researches:
-#    researchBs=BeautifulSoup(str(research),'xml')
-#    print researchBs.id.string + " : " +researchBs.done.string
-#    if(researchBs.done.string=="true"):
-#        rid=researchBs.id.string
-#        doneCount +=1
-#        print "Consuming id "+rid
-#        consumeResearch(rid)
+for research in researches:
+    researchBs=BeautifulSoup(str(research),'xml')
+    print researchBs.id.string + " : " +researchBs.done.string
+    if(researchBs.done.string=="true"):
+        rid=researchBs.id.string
+        doneCount +=1
+        print "Consuming id "+rid
+        consumeResearch(rid)
 
 #start research
 
